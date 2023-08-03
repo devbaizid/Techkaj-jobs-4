@@ -71,7 +71,7 @@ def job_detail(request, job_id):
             proposal.freelancer = request.user
             proposal.project = job
             proposal.status = 'pending'
-            form.save()
+            proposal = form.save(commit=True)
             messages.success(request, f"Your proposal has been sent successfully. ,, You will get an update soon to Email {proposal.email}")
             subject = f"{proposal.name} sent a Proposal for {job.title} Techkaj-job"
             date_time_x = timezone.now()
