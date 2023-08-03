@@ -52,7 +52,6 @@ def job_list(request):
 
     return render(request, 'job_list.html', {'jobs': jobs,"all_skills":all_skills})
 
-
 @allow_guest_user
 def job_detail(request, job_id):
     user = request.user
@@ -73,31 +72,28 @@ def job_detail(request, job_id):
             proposal.project = job
             proposal.status = 'pending'
             form.save()
-            messages.success(request, f"Your proposal has been sent successfully. ,, You will get update soon to Email {proposal.email}")
-            subject = f"{proposal.name} sent a  Proposal  for {job.title} Techkaj-job"
+            messages.success(request, f"Your proposal has been sent successfully. ,, You will get an update soon to Email {proposal.email}")
+            subject = f"{proposal.name} sent a Proposal for {job.title} Techkaj-job"
             date_time_x = timezone.now()
-            html_message = render_to_string('me_email.html', {'item':proposal,"date_time_x":date_time_x})
+            html_message = render_to_string('me_email.html', {'item': proposal, "date_time_x": date_time_x})
             message = strip_tags(html_message)
             email_list = email_for_send_message.objects.all()
-            recipient_list = []
-            for ix in email_list:
-                recipient_list.append(ix.email)
-               
+            recipient_list = [ix.email for ix in email_list]
 
             send_mail(
-            subject,
-            message,
-            settings.FROM_EMAIL,
-            recipient_list,
-            fail_silently=False,
-            html_message=html_message,
+                subject,
+                message,
+                settings.FROM_EMAIL,
+                recipient_list,
+                fail_silently=False,
+                html_message=html_message,
             )
             return redirect('dashboard')  # Replace 'success_url' with your desired success page URL
 
     else:
         form = ProposalForm()
 
-    return render(request, 'job_detail.html', {'job': job, 'proposals': proposals, 'is_applied': is_applied,"form":form})
+    return render(request, 'job_detail.html', {'job': job, 'proposals': proposals, 'is_applied': is_applied, "form": form})
 
 
 
