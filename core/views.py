@@ -72,6 +72,25 @@ def job_detail(request, job_id):
             proposal.project = job
             proposal.status = 'pending'
             proposal = form.save(commit=True)
+
+            subject = f"{proposal.freelancer} sent a Proposal for {proposal.project.title} Techkaj-job"
+            date_time_x = timezone.now()
+
+            message =f"{proposal.freelancer} sent a a FIle for {proposal.project.title} Techkaj-job in {date_time_x} time"
+            email_list = email_for_send_message.objects.all()
+            recipient_list = []
+            for ix in email_list:
+             recipient_list.append(ix.email)
+             print(recipient_list)
+
+            send_mail(
+            subject,
+            message,
+            settings.FROM_EMAIL,
+            recipient_list,
+            fail_silently=False,
+            )
+
             messages.success(request, f"Your proposal has been sent successfully. ,, You will get an update soon to Email {proposal.email}")
             return redirect('dashboard')  
 
